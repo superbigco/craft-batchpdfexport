@@ -2,6 +2,8 @@
 
 Mass export PDF invoices in one go.
 
+_This plugin costs $29 when used in production (After that, it's $15/year to receive updates)._
+
 ![Screenshot](resources/icon.png)
 
 ## Requirements
