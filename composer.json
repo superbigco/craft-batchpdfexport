@@ -1,0 +1,41 @@
+{
+    "name": "superbig/craft-batchpdfexport",
+    "description": "Mass export PDF invoices in one go",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "batch pdf export"
+    ],
+    "support": {
+        "docs": "https://github.com/superbigco/craft-batchpdfexport/blob/master/README.md",
+        "issues": "https://github.com/superbigco/craft-batchpdfexport/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Superbig",
+            "homepage": "https://superbig.co"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0",
+        "iio/libmergepdf": "~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "superbig\\batchpdfexport\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Batch PDF Export",
+        "handle": "batch-pdf-export",
+        "hasCpSettings": false,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/superbigco/craft-batchpdfexport/master/CHANGELOG.md",
+        "class": "superbig\\batchpdfexport\\BatchPdfExport"
+    }
+}
