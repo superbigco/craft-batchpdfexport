@@ -68,23 +68,10 @@ class BatchPdfExport extends Plugin
         $this->setComponents([
             'batchPdfExportService' => BatchPdfExportService::class,
         ]);
-
-        if (Craft::$app instanceof ConsoleApplication) {
-            $this->controllerNamespace = 'superbig\batchpdfexport\console\controllers';
-        }
-
+        
         Event::on(Order::class, Order::EVENT_REGISTER_ACTIONS, function(RegisterElementActionsEvent $event) {
             $event->actions[] = ExportAction::class;
         });
-
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function(PluginEvent $event) {
-                if ($event->plugin === $this) {
-                }
-            }
-        );
 
         Craft::info(
             Craft::t(
