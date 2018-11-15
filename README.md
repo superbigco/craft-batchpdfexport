@@ -28,7 +28,7 @@ After you install it, the option Export PDFs will be available under the element
 
 ## Configuring Batch PDF Export
 
-This plugin uses the settings _Order PDF Template_ and _Order PDF Filename Format_ in Commerce -> General Settings to generate the PDFs.
+This plugin uses the settings _Order PDF Template_ and _Order PDF Filename Format_ in _Commerce -> General Settings_ to generate the PDFs.
 
 In general, if the normal PDF download works, the batch export should also work.
 
