@@ -13,7 +13,7 @@ namespace superbig\batchpdfexport\services;
 use craft\commerce\elements\Order;
 use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
-use iio\libmergepdf\Merger;
+use iio\libmergepdf\Merger as Merger;
 use superbig\batchpdfexport\BatchPdfExport;
 use craft\commerce\Plugin as Commerce;
 
