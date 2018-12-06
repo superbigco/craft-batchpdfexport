@@ -2,7 +2,7 @@
     "name": "superbig/craft-batchpdfexport",
     "description": "Mass export PDF invoices in one go",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "craft",
         "cms",
