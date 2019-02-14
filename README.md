@@ -63,6 +63,6 @@ return [
 ## Using Batch PDF Export
 
 1. Select one or more order in the Orders list and click the action dropdown in the toolbar
-2. Select Export Invoices
+2. Select _Generate Invoices PDF_ (default label)
 
 Brought to you by [Superbig](https://superbig.co)
