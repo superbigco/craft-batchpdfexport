@@ -4,7 +4,11 @@ Mass export PDF invoices in one go.
 
 _This plugin costs $29 when used in production (After that, it's $15/year to receive updates)._
 
-![Screenshot](resources/icon.png)
+![Icon](resources/icon.png)
+
+## Screenshots
+
+![Screenshot](resources/batch-pdf-export-screenshot.png)
 
 ## Requirements
 
@@ -30,13 +34,35 @@ After you install it, the option Export PDFs will be available under the element
 
 ## Configuring Batch PDF Export
 
-This plugin uses the settings _Order PDF Template_ and _Order PDF Filename Format_ in _Commerce -> General Settings_ to generate the PDFs.
+This plugin uses the settings _Order PDF Template_ and _Order PDF Filename Format_ in _Commerce -> General Settings_ to generate the PDFs by default.
 
 In general, if the normal PDF download works, the batch export should also work.
+
+If you want to add custom labels and templates, you can use the Plugin settings to enable this.
+
+You can also override the options with a config file called `batch-pdf-export.php`:
+
+```php
+<?php
+return [
+    'defaultLabel' => 'Export Invoices',
+    'useCustomActions' => true,
+    'actions'          => [
+        [
+            'label'    => 'Order Labels',
+            'template' => 'shop/_pdf/order-labels',
+        ],
+        [
+            'label'    => 'Order invoices',
+            'template' => 'shop/_pdf/order-invoices',
+        ],
+    ],
+];
+```
 
 ## Using Batch PDF Export
 
 1. Select one or more order in the Orders list and click the action dropdown in the toolbar
-2. Select Export PDFs 
+2. Select Export Invoices
 
 Brought to you by [Superbig](https://superbig.co)

@@ -33,8 +33,8 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        $ids = Craft::$app->getRequest()->getRequiredParam('ids');
-        //$ids = explode(',', $ids);
+        $ids      = Craft::$app->getRequest()->getRequiredParam('ids');
+        $template = Craft::$app->getRequest()->getRequiredParam('template');
 
         if (empty($ids)) {
             throw new InvalidConfigException('No order ids provided');
@@ -45,7 +45,7 @@ class DefaultController extends Controller
                        ->id($ids)
                        ->all();
 
-        $output   = BatchPdfExport::$plugin->batchPdfExportService->generatePdfs($orders, $ids);
+        $output   = BatchPdfExport::$plugin->batchPdfExportService->generatePdfs($orders, $ids, $template);
         $filename = $output['filename'];
 
         Craft::$app->getResponse()->sendContentAsFile($output['output'], $filename, [

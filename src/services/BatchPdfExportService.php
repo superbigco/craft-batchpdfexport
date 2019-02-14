@@ -11,6 +11,7 @@
 namespace superbig\batchpdfexport\services;
 
 use craft\commerce\elements\Order;
+use craft\events\RegisterElementActionsEvent;
 use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
 use iio\libmergepdf\Merger as Merger;
@@ -19,6 +20,8 @@ use craft\commerce\Plugin as Commerce;
 
 use Craft;
 use craft\base\Component;
+use superbig\batchpdfexport\elementactions\ExportAction;
+use yii\base\InvalidArgumentException;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 
@@ -32,32 +35,59 @@ class BatchPdfExportService extends Component
     // Public Methods
     // =========================================================================
 
-    public function generatePdfs($orders = null, $ids = [], $option = null)
+    public function registerActions(RegisterElementActionsEvent $event)
+    {
+        $settings         = BatchPdfExport::$plugin->getSettings();
+        $useCustomActions = $settings->useCustomActions;
+        $customActions    = $settings->actions;
+
+        if ($useCustomActions && !empty($customActions)) {
+            $elementsService = Craft::$app->getElements();
+            foreach ($customActions as $action) {
+                $label    = $action['label'] ?? null;
+                $template = $action['template'] ?? null;
+
+                if (empty($label) || empty($template)) {
+                    throw new InvalidArgumentException('Both action label and template need to be specified.');
+                }
+
+                $event->actions[] = $elementsService->createAction([
+                    'type'     => ExportAction::class,
+                    'label'    => Craft::t('batch-pdf-export', $label),
+                    'template' => $template,
+                ]);
+            }
+        }
+        else {
+            $event->actions[] = ExportAction::class;
+        }
+    }
+
+    public function generatePdfs($orders = null, array $ids = [], $template): array
     {
         if (!$orders) {
             return false;
         }
 
-        $view    = Craft::$app->getView();
-        $oldMode = $view->getTemplateMode();
+        $option = null;
+        $view   = Craft::$app->getView();
 
         // Set the config options
-        $mergePaths        = [];
-        $pathService       = Craft::$app->getPath();
-        $tempPath          = $pathService->getTempPath() . '/batchpdfs/';
-        $fileNameMerged    = 'Orders-' . implode('-', $ids) . '.pdf';
-        $fileNameMergePath = $tempPath . '/' . $fileNameMerged;
-        $filenameFormat    = Commerce::getInstance()->getSettings()->orderPdfFilenameFormat;
+        $mergePaths     = [];
+        $pathService    = Craft::$app->getPath();
+        $tempPath       = $pathService->getTempPath() . '/batchpdfs/';
+        $fileNameMerged = 'Orders-' . implode('-', $ids) . '.pdf';
+        $filenameFormat = Commerce::getInstance()->getSettings()->orderPdfFilenameFormat;
 
         FileHelper::createDirectory($tempPath);
 
         /** @var Order $order */
         foreach ($orders as $order) {
-            $pdfOutput = Commerce::getInstance()->getPdf()->renderPdfForOrder($order, $option);
+            $pdfOutput = Commerce::getInstance()->getPdf()->renderPdfForOrder($order, $option, $template);
             $fileName  = $view->renderObjectTemplate($filenameFormat, $order);
 
             if (empty($fileName)) {
-                $fileName = "Order-" . $order->number;
+                $fileName = 'Order-' . $order->number;
             }
 
             // Append random suffix and pdf ending
@@ -84,5 +114,19 @@ class BatchPdfExportService extends Component
         ];
 
         return $output;
+    }
+
+    public function getDefaultTemplate(): string
+    {
+        return Commerce::getInstance()->getSettings()->orderPdfPath;
+    }
+
+    public function getDefaultLabel(): string
+    {
+        $defaultLabel    = BatchPdfExport::$plugin->getSettings()->defaultLabel;
+        $label           = !empty($defaultLabel) ? $defaultLabel : 'Generate Invoices PDF';
+        $translatedLabel = Craft::t('batch-pdf-export', $label);
+
+        return $translatedLabel;
     }
 }

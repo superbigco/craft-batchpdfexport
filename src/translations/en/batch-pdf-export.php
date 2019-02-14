@@ -14,6 +14,6 @@
  * @since     1.0.0
  */
 return [
-    'Batch PDF Export plugin loaded' => 'Batch PDF Export plugin loaded',
     'Export PDFs' => 'Export PDFs',
+    'Generate Invoices PDF' => 'Generate Invoices PDF',
 ];

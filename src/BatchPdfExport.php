@@ -13,6 +13,7 @@ namespace superbig\batchpdfexport;
 use craft\base\Element;
 use craft\commerce\elements\Order;
 use craft\events\RegisterElementActionsEvent;
+use superbig\batchpdfexport\assetbundles\BatchPdfExport\BatchPdfExportAsset;
 use superbig\batchpdfexport\elementactions\ExportAction;
 use superbig\batchpdfexport\services\BatchPdfExportService;
 use superbig\batchpdfexport\models\Settings;
@@ -35,6 +36,7 @@ use yii\base\Event;
  * @since     1.0.0
  *
  * @property  BatchPdfExportService $batchPdfExportService
+ * @method  Settings getSettings()
  */
 class BatchPdfExport extends Plugin
 {
@@ -68,10 +70,12 @@ class BatchPdfExport extends Plugin
         $this->setComponents([
             'batchPdfExportService' => BatchPdfExportService::class,
         ]);
-        
-        Event::on(Order::class, Order::EVENT_REGISTER_ACTIONS, function(RegisterElementActionsEvent $event) {
-            $event->actions[] = ExportAction::class;
-        });
+
+        Event::on(Order::class, Order::EVENT_REGISTER_ACTIONS, [self::$plugin->batchPdfExportService, 'registerActions']);
+
+        if (Craft::$app->getRequest()->getIsCpRequest() && !Craft::$app->getRequest()->getIsActionRequest()) {
+            Craft::$app->getView()->registerAssetBundle(BatchPdfExportAsset::class);
+        }
 
         Craft::info(
             Craft::t(
@@ -80,6 +84,35 @@ class BatchPdfExport extends Plugin
                 ['name' => $this->name]
             ),
             __METHOD__
+        );
+    }
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    protected function createSettingsModel()
+    {
+        return new Settings();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function settingsHtml(): string
+    {
+        $settings  = $this->getSettings();
+        $overrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
+
+        return Craft::$app->view->renderTemplate(
+            'batch-pdf-export/settings',
+            [
+                'settings'  => $settings,
+                'plugin'    => $this,
+                'overrides' => array_keys($overrides),
+            ]
         );
     }
 }
