@@ -13,7 +13,7 @@ namespace superbig\batchpdfexport;
 use craft\base\Element;
 use craft\commerce\elements\Order;
 use craft\events\RegisterElementActionsEvent;
-use superbig\batchpdfexport\assetbundles\BatchPdfExport\BatchPdfExportAsset;
+use superbig\batchpdfexport\assetbundles\batchpdfexport\BatchPdfExportAsset;
 use superbig\batchpdfexport\elementactions\ExportAction;
 use superbig\batchpdfexport\services\BatchPdfExportService;
 use superbig\batchpdfexport\models\Settings;

@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2018 Superbig
  */
 
-namespace superbig\batchpdfexport\assetbundles\BatchPdfExport;
+namespace superbig\batchpdfexport\assetbundles\batchpdfexport;
 
 use Craft;
 use craft\web\AssetBundle;
